@@ -4,20 +4,20 @@
 
 # Global Variable (Dictionary dalam List)
 RM = [
-    {'ID': '100100','Nama': 'Calcium Carbonate','Stok': 10000},
-    {'ID': '100101','Nama': 'Vitamin A','Stok': 1000 },
-    {'ID': '100102','Nama': 'Vitamin B Kompleks','Stok': 2000},
-    {'ID': '100103','Nama': 'Vitamin C','Stok': 2000},
-    {'ID': '100104','Nama': 'Iron Sulphate','Stok': 5000},
-    {'ID': '100105','Nama': 'Zinc Sulphate','Stok': 5000},
-    {'ID': '100106','Nama': 'Sodium Chloride','Stok': 0}
+    {'ID': 100100,'Nama': 'Calcium Carbonate','Stok': 10000},
+    {'ID': 100101,'Nama': 'Vitamin A','Stok': 1000 },
+    {'ID': 100102,'Nama': 'Vitamin B Kompleks','Stok': 2000},
+    {'ID': 100103,'Nama': 'Vitamin C','Stok': 2000},
+    {'ID': 100104,'Nama': 'Iron Sulphate','Stok': 5000},
+    {'ID': 100105,'Nama': 'Zinc Sulphate','Stok': 5000},
+    {'ID': 100106,'Nama': 'Sodium Chloride','Stok': 0}
     ]
 FG = [
-    {'ID': '200100', 'Nama': 'Mineral Mix A','Stok': 80000},
-    {'ID': '200101', 'Nama': 'Minevit A','Stok': 9000},
-    {'ID': '200102', 'Nama': 'Minevit B','Stok': 10000},
-    {'ID': '200103', 'Nama': 'Mineral Mix Aqua','Stok': 15000},
-    {'ID': '200104', 'Nama': 'Minevit 100','Stok': 20000}
+    {'ID': 200100, 'Nama': 'Mineral Mix A','Stok': 80000},
+    {'ID': 200101, 'Nama': 'Minevit A','Stok': 9000},
+    {'ID': 200102, 'Nama': 'Minevit B','Stok': 10000},
+    {'ID': 200103, 'Nama': 'Mineral Mix Aqua','Stok': 15000},
+    {'ID': 200104, 'Nama': 'Minevit 100','Stok': 20000}
     ]
 
 # Inventory Display Function -> Read
@@ -53,18 +53,21 @@ def log_inventorycheck(): # Read
     3. Back to Landing Page'''
     print(menu)
     while True:
-        Entry = input('\nEnter Input: ')
-        if Entry == '1':
-            rm_inventory()
-            print(menu)
-        elif Entry == '2':
-            fg_inventory()
-            print(menu)
-        elif Entry == '3':
-            logisticpage()
-            break
-        else:
-            print('Invalid entry. Please choose a valid option.')
+        try:
+            Entry = int(input('\nEnter Input: '))
+            if Entry == 1:
+                rm_inventory()
+                print(menu)
+            elif Entry == 2:
+                fg_inventory()
+                print(menu)
+            elif Entry == 3:
+                logisticpage()
+                break
+            else:
+                print('Invalid entry. Please choose a valid option.')
+        except ValueError:
+            print('Invalid input, please enter number')
 
 def log_addinventory(): # Create
     menu='''
@@ -74,97 +77,100 @@ def log_addinventory(): # Create
     3. Back to Landing Page'''
     print(menu)
     while True:
-        Entry = input('\nEnter Input: ')
-        
-        if Entry == '1':
-            id = input('\nEnter new Raw Material ID: ')
-            name = input('Enter Raw Material name: ').lower()
-            found = False
-            for item in range(len(RM)):
-                if RM[item]['Nama'].lower() == name or RM[item]['ID'] == id:
-                    found = True
-                    rm_inventory()
-                    break        
-            if not found: 
-                stock = int(input('Enter quantity amount (Kg): '))
-                while True:
-                    confirm = input(f'\nProceed to enter {name.title()} ({id}) for {stock} Kg to system? (Y/N)?: ')
-                    if confirm.upper() == 'Y':
-                        new_item = {'ID': id, 'Nama' : name.title(), 'Stok': stock}
-                        RM.append(new_item)
-                        print('\nData succesfully applied!\n')
+        try:
+            Entry = int(input('\nEnter Input: '))
+
+            if Entry == 1:
+                name = input('Enter Raw Material name: ').lower()
+                found = False
+                for item in range(len(RM)):
+                    if RM[item]['Nama'].lower() == name:
+                        found = True
                         rm_inventory()
-                        log_addinventory()
-                        break
-                    elif confirm.upper() == 'N':
-                        print('\nAdd new Raw Material data cancelled\n')
-                        log_addinventory()
-                        break
-                    else:
-                        print('Invalid entry. Please choose valid option (Y/N)')
-            if found:
-                print('Item(s) already exist')
-                while True:
-                    conf=input('Proceed to Stock Update menu? (Y/N): ')
-                    if conf.upper() == 'Y':
-                        log_stockupdate()
-                        break
-                    elif conf.upper() == 'N':
-                        print('\nAdd New Raw Material Data cancelled')
-                        log_addinventory()
-                        break  
-                    else:
-                        print('Invalid entry. Please choose valid option (Y/N)')
-            break
-        
-        elif Entry == '2':
-            id = input('\nEnter new Finished Good ID: ')
-            name = input('Enter finished good name: ').lower()
-            found = False
-            for item in range(len(FG)):
-                if FG[item]['Nama'].lower() == name or FG[item]['ID'] == id:
-                    found = True
-                    fg_inventory()
-                    break             
-            if not found:  
-                stock = int(input('Enter quantity amount (Kg): '))
-                while True:
-                    confirm = input(f'\nProceed to enter {name.title()} ({id}) for {stock} Kg to system? (Y/N)?: ')
-                    if confirm.upper() == 'Y':
-                        new_item = {'ID': id, 'Nama' : name.title(), 'Stok': stock}
-                        FG.append(new_item)
-                        print('Data succesfully applied!')
+                        break        
+                if not found:
+                    id =  max(RM[item]['ID'] for item in range(len(RM))) + 1 if RM else 100100
+                    stock = int(input('Enter quantity amount (Kg): '))
+                    while True:
+                        confirm = input(f'\nProceed to enter {name.title()} ({id}) for {stock} Kg to system? (Y/N)?: ')
+                        if confirm.upper() == 'Y':
+                            new_item = {'ID': id, 'Nama' : name.title(), 'Stok': stock}
+                            RM.append(new_item)
+                            print('\nData succesfully applied!\n')
+                            rm_inventory()
+                            log_addinventory()
+                            break
+                        elif confirm.upper() == 'N':
+                            print('\nAdd new Raw Material data cancelled\n')
+                            log_addinventory()
+                            break
+                        else:
+                            print('Invalid entry. Please choose valid option (Y/N)')
+                if found:
+                    print('Item(s) already exist')
+                    while True:
+                        conf=input('Proceed to Stock Update menu? (Y/N): ')
+                        if conf.upper() == 'Y':
+                            log_stockupdate()
+                            break
+                        elif conf.upper() == 'N':
+                            print('\nAdd New Raw Material Data cancelled')
+                            log_addinventory()
+                            break  
+                        else:
+                            print('Invalid entry. Please choose valid option (Y/N)')
+                break
+            
+            elif Entry == 2:
+                name = input('Enter Finished Good name: ').lower()
+                found = False
+                for item in range(len(FG)):
+                    if FG[item]['Nama'].lower() == name:
+                        found = True
                         fg_inventory()
-                        log_addinventory()
-                        break
-                        
-                    elif confirm.upper() == 'N':
-                        print('Add new Raw Material cancelled')
-                        log_addinventory()
-                        break
-                    else:
-                        print('Invalid entry. Please enter valid option (Y/N)')
-            if found:
-                print('Item(s) already exist')
-                while True:
-                    conf=input('Proceed to Stock Update page? (Y/N): ')
-                    if conf.upper() == 'Y':
-                        log_stockupdate()
-                        break
-                    elif conf.upper() == 'N':
-                        print('\nRedirecting to Add New Inventory page')
-                        log_addinventory()
-                        break
-                    else:
-                        print('Invalid input! Please enter a valid option (Y/N)') 
-            break
-        
-        elif Entry == '3':
-            logisticpage()
-            break
-        
-        else:
-            print('\nInvalid input! Please enter a valid option [1-3]')
+                        break             
+                if not found: 
+                    id =  max(FG[item]['ID'] for item in range(len(FG))) + 1 if FG else 200100 
+                    stock = int(input('Enter quantity amount (Kg): '))
+                    while True:
+                        confirm = input(f'\nProceed to enter {name.title()} ({id}) for {stock} Kg to system? (Y/N)?: ')
+                        if confirm.upper() == 'Y':
+                            new_item = {'ID': id, 'Nama' : name.title(), 'Stok': stock}
+                            FG.append(new_item)
+                            print('Data succesfully applied!')
+                            fg_inventory()
+                            log_addinventory()
+                            break
+                            
+                        elif confirm.upper() == 'N':
+                            print('Add new Raw Material cancelled')
+                            log_addinventory()
+                            break
+                        else:
+                            print('Invalid entry. Please enter valid option (Y/N)')
+                if found:
+                    print('Item(s) already exist')
+                    while True:
+                        conf=input('Proceed to Stock Update page? (Y/N): ')
+                        if conf.upper() == 'Y':
+                            log_stockupdate()
+                            break
+                        elif conf.upper() == 'N':
+                            print('\nRedirecting to Add New Inventory page')
+                            log_addinventory()
+                            break
+                        else:
+                            print('Invalid input! Please enter a valid option (Y/N)') 
+                break
+            
+            elif Entry == 3:
+                logisticpage()
+                break
+            
+            else:
+                print('\nInvalid input! Please enter a valid option [1-3]')
+        except ValueError:
+            print('Invalid input, please enter number')
 
 def log_stockupdate(): # Able to increase stock quantity (Update)
     menu = '''
@@ -174,99 +180,103 @@ def log_stockupdate(): # Able to increase stock quantity (Update)
     3. Back to Landing Page'''
     print(menu)
     while True:
-        Entry = input('\nEnter Input: ')
+        try:
+            Entry = int(input('\nEnter Input: '))
 
-        if Entry == '1':
-            rm_inventory()
-            item_id = input('\nEnter Raw Material ID: ')
-            found = False
-            for item in range(len(RM)):
-                if RM[item]['ID'] == item_id:
-                    print(f'\nPlease enter amount to add for {RM[item]["Nama"]}')
-                    stock_increase = int(input('Enter quantity to add (Kg): '))
-                    RM[item]['Stok'] += stock_increase
-                    print(f'\nAdd {RM[item]["Nama".title()]} ({item_id}) stock by {stock_increase} Kg?')
-                    found = True
-                    break
-            if not found:
-                print(f'\nID {item_id} not registered')               
-                while True:
-                    conf = input('Proceed to Add Inventory page? (Y/N):')
-                    if conf.upper() == 'Y':
-                        log_addinventory()
+            if Entry == 1:
+                rm_inventory()
+                item_name = input('\nEnter Raw Material name: ').title()
+                found = False
+                for item in range(len(RM)):
+                    if RM[item]['Nama'] == item_name:
+                        print(f'\nPlease enter amount to add for {item_name} ({RM[item]["ID"]})')
+                        stock_increase = int(input('Enter quantity to add (Kg): '))
+                        RM[item]['Stok'] += stock_increase
+                        print(f'\nAdd {item_name} ({RM[item]["ID"]}) stock by {stock_increase} Kg?')
+                        found = True
                         break
-                    elif conf.upper() == 'N':
-                        print('\nRedirecting to Stock Update menu page')
-                        log_stockupdate()
-                        break
-                    else:
-                        print('Invalid entry. Please enter valid option (Y/N)')   
-            if found:
-                while True:
-                    confirm = input('\nProceed to update? (Y/N): ')
-                    if confirm.upper() == 'Y':
-                        print('\nRaw Material stock succesfully updated')
-                        rm_inventory()
-                        log_stockupdate()
-                        break
-                    elif confirm.upper() == 'N':
-                        RM[item]['Stok'] -= stock_increase
-                        print('\nStock update cancelled, redirecting to Stock Update menu page')
-                        rm_inventory()
-                        log_stockupdate()
-                        break
-                    else:
-                        print('\nInvalid input! Please enter a valid option (Y/N)')
-            break
+                if not found:
+                    print(f'\n{item_name} not registered')               
+                    while True:
+                        conf = input('Proceed to Add Inventory page? (Y/N):')
+                        if conf.upper() == 'Y':
+                            log_addinventory()
+                            break
+                        elif conf.upper() == 'N':
+                            print('\nRedirecting to Stock Update menu page')
+                            log_stockupdate()
+                            break
+                        else:
+                            print('Invalid entry. Please enter valid option (Y/N)')   
+                if found:
+                    while True:
+                        confirm = input('\nProceed to update? (Y/N): ')
+                        if confirm.upper() == 'Y':
+                            print('\nRaw Material stock succesfully updated')
+                            rm_inventory()
+                            log_stockupdate()
+                            break
+                        elif confirm.upper() == 'N':
+                            RM[item]['Stok'] -= stock_increase
+                            print('\nStock update cancelled, redirecting to Stock Update menu page')
+                            rm_inventory()
+                            log_stockupdate()
+                            break
+                        else:
+                            print('\nInvalid input! Please enter a valid option (Y/N)')
+                break
 
-        elif Entry == '2':
-            fg_inventory()
-            item_id = input('\nEnter Finished Good ID: ')
-            found = False
-            for item in range(len(FG)):
-                if FG[item]['ID'] == item_id:
-                    print(f'\nPlease enter amount to add for {FG[item]["Nama"]}')
-                    stock_increase = int(input('Enter quantity to add: '))
-                    FG[item]['Stok'] += stock_increase
-                    print(f'\nAdd {FG[item]["Nama".title()]} ({item_id}) stock by {stock_increase} Kg?')
-                    found = True
-                    break
-            if not found:
-                print(f'\nID {item_id} not registered')
-                while True:
-                    conf = input('Proceed to Add Inventory Data? (Y/N):')
-                    if conf.upper() == 'Y':
-                        log_addinventory()
+            elif Entry == 2:
+                fg_inventory()
+                item_name = input('\nEnter Finished Good name: ').title()
+                found = False
+                for item in range(len(FG)):
+                    if FG[item]['Nama'] == item_name:
+                        print(f'\nPlease enter amount to add for {item_name} ({FG[item]["ID"]})')
+                        stock_increase = int(input('Enter quantity to add (Kg): '))
+                        FG[item]['Stok'] += stock_increase
+                        print(f'\nAdd {item_name} ({FG[item]["ID"]}) stock by {stock_increase} Kg?')
+                        found = True
                         break
-                    elif conf.upper() == 'N':
-                        print('\nRedirecting to Stock Update menu page')
-                        log_stockupdate()
-                        break
-                    else:
-                        print('Invalid entry. Please choose valid option (Y/N)')
-            if found:
-                while True:
-                    confirm = input('Proceed to update? (Y/N) ')
-                    if confirm.upper() == 'Y':
-                        print('Finished Good stock succesfully updated')
-                        fg_inventory()
-                        log_stockupdate()
-                        break
-                    elif confirm.upper() == 'N':
-                        FG[item]['Stok'] -= stock_increase
-                        print('Stock update cancelled, redirecting to Stock Update menu page')
-                        fg_inventory()
-                        log_stockupdate()
-                        break
-                    else:
-                        print('\nInvalid input! Please enter a valid option (Y/N)')
-            break
-                  
-        elif Entry == '3':
-            logisticpage()
-            break
-        else:
-            print('\nInvalid input! Please choose a valid option [1-3]')
+                if not found:
+                    print(f'\n{item_name} not registered')
+                    while True:
+                        conf = input('Proceed to Add Inventory Data? (Y/N):')
+                        if conf.upper() == 'Y':
+                            log_addinventory()
+                            break
+                        elif conf.upper() == 'N':
+                            print('\nRedirecting to Stock Update menu page')
+                            log_stockupdate()
+                            break
+                        else:
+                            print('Invalid entry. Please choose valid option (Y/N)')
+                if found:
+                    while True:
+                        confirm = input('Proceed to update? (Y/N) ')
+                        if confirm.upper() == 'Y':
+                            print('Finished Good stock succesfully updated')
+                            fg_inventory()
+                            log_stockupdate()
+                            break
+                        elif confirm.upper() == 'N':
+                            FG[item]['Stok'] -= stock_increase
+                            print('Stock update cancelled, redirecting to Stock Update menu page')
+                            fg_inventory()
+                            log_stockupdate()
+                            break
+                        else:
+                            print('\nInvalid input! Please enter a valid option (Y/N)')
+                break
+                    
+            elif Entry == 3:
+                logisticpage()
+                break
+            
+            else:
+                print('\nInvalid input! Please choose a valid option [1-3]')
+        except ValueError:
+            print('Invalid input, please enter number')
 
 def log_deletedata(): # Delete inventory from list 
     menu = '''
@@ -276,70 +286,73 @@ def log_deletedata(): # Delete inventory from list
     3. Back to Landing Page'''
     print(menu)
     while True:
-        Entry = input('\nEnter Input: ')
+        try:
+            Entry = int(input('\nEnter Input: '))
 
-        if Entry == '1':
-            rm_inventory()
-            item_id = input('\nSelect Raw Material ID to be erase: ')
-            found = False
-            for item in range(len(RM)):
-                if RM[item]['ID'] == item_id:
-                    found = True
-                    while True:
-                        confirm = input(f'\nAre you sure want to delete {RM[item]["Nama"]} ({item_id}) from inventory? (Y/N): ')
-                        if confirm.upper() == 'Y':
-                            RM.pop(item)
-                            print('\nRaw Material data erased')
-                            rm_inventory()
-                            log_deletedata()
-                            break                         
-                        elif confirm.upper() == 'N':
-                            print('\nData erase aborted')
-                            rm_inventory()
-                            log_deletedata()
-                            break                           
-                        else:
-                            print('\nInvalid entry. Please enter valid option! (Y/N)')         
-            if not found:
-                print(f'\nRaw Material with ID of {item_id} not found in inventory!')
-                log_deletedata()
+            if Entry == 1:
+                rm_inventory()
+                item_name = input('\nSelect Raw Material name to delete: ').title()
+                found = False
+                for item in range(len(RM)):
+                    if RM[item]['Nama'] == item_name:
+                        found = True
+                        while True:
+                            confirm = input(f'\nAre you sure want to delete {item_name} ({RM[item]["ID"]}) from inventory? (Y/N): ')
+                            if confirm.upper() == 'Y':
+                                RM.pop(item)
+                                print('\nRaw Material data deleted')
+                                rm_inventory()
+                                log_deletedata()
+                                break                         
+                            elif confirm.upper() == 'N':
+                                print('\nCancelled')
+                                rm_inventory()
+                                log_deletedata()
+                                break                           
+                            else:
+                                print('\nInvalid entry. Please enter valid option! (Y/N)')         
+                if not found:
+                    print(f'\n{item_name} not found in inventory!')
+                    log_deletedata()
+                    break
                 break
-            break
+                
+            elif Entry == 2:
+                fg_inventory()
+                item_name = input('\nSelect Finished Good name to delete: ').title()
+                found = False
+                for item in range(len(FG)):
+                    if FG[item]['Nama'] == item_name:
+                        found = True
+                        while True:
+                            confirm = input(f'\nAre you sure to delete {item_name} ({FG[item]["ID"]}) from inventory? (Y/N): ')
+                            if confirm.upper() == 'Y':
+                                FG.pop(item)
+                                print('\nFinished Good data deleted')
+                                fg_inventory()
+                                log_deletedata()
+                                break
+                            elif confirm.upper() == 'N':
+                                print('\nCancelled')
+                                fg_inventory()
+                                log_deletedata()
+                                break
+                            else:
+                                print('\nInvalid entry. Please enter valid option! (Y/N)')
+                if not found:
+                    print(f'\n{item_name} not found in inventory')
+                    log_deletedata()
+                    break
+                break
             
-        elif Entry == '2':
-            fg_inventory()
-            item_id = input('\nSelect Finished Good ID to be erase: ')
-            found = False
-            for item in range(len(FG)):
-                 if FG[item]['ID'] == item_id:
-                    found = True
-                    while True:
-                        confirm = input(f'\nAre you sure to delete {FG[item]["Nama"]} ({item_id}) from inventory? (Y/N): ')
-                        if confirm.upper() == 'Y':
-                            FG.pop(item)
-                            print('\nFinished Good data erased')
-                            fg_inventory()
-                            log_deletedata()
-                            break
-                        elif confirm.upper() == 'N':
-                            print('\nData erase aborted')
-                            fg_inventory()
-                            log_deletedata()
-                            break
-                        else:
-                            print('\nInvalid entry. Please enter valid option! (Y/N)')
-            if not found:
-                print(f'\n{RM[item]["Nama"]} ({item_id}) not found in inventory')
-                log_deletedata()
+            elif Entry == 3:
+                logisticpage()
                 break
-            break
-        
-        elif Entry == '3':
-            logisticpage()
-            break
 
-        else:
-            print('\nInvalid input! Please choose a valid option [1-3]')
+            else:
+                print('\nInvalid input! Please choose a valid option [1-3]')
+        except ValueError:
+            print('Invalid input, please enter number')
 
 # PPIC Dept. Functions
 def ppic_production(): # Decrease stock quantity (Update)
@@ -407,8 +420,7 @@ def proc_autocheck(): # Read data (Raw Material) and automaticly display warning
         print("\nAll Raw Material stock is in acceptable level")
 
 # Sales Dept. Functions
-def sales_dataentry(): # Update data on Finished Goods (Substract)
-    
+def sales_dataentry(): # Update data on Finished Goods (Substract)   
     intro = '''
 ====== Sales Data Entry ======'''
     print(intro)
@@ -470,21 +482,24 @@ def MainMenu():
        5. Exit'''
     print(menu)
     while True:
-        Entry = input('\nChoose your department: ')
-        if Entry == '1':
-            log_landingpage()
-        elif Entry == '2':
-            ppic_landingpage()
-        elif Entry == '3':
-            proc_landingpage()
-        elif Entry == '4':
-            sales_landingpage()
-        elif Entry == '5':
-            print('\nExiting program, have a nice day!')
-            exit()
-        else:
-            print('Invalid entry, please choose a valid option [1-5]')
-            print(menu)
+        try:
+            Entry = int(input('\nChoose your department: '))
+            if Entry == 1:
+                log_landingpage()
+            elif Entry == 2:
+                ppic_landingpage()
+            elif Entry == 3:
+                proc_landingpage()
+            elif Entry == 4:
+                sales_landingpage()
+            elif Entry == 5:
+                print('\nExiting program, have a nice day!')
+                exit()
+            else:
+                print('Invalid entry, please choose a valid option [1-5]')
+                print(menu)
+        except ValueError:
+            print('Invalid input, please enter number')
 
 # Logistic Landing Page
 def log_landingpage():
@@ -492,24 +507,27 @@ def log_landingpage():
     keycode = '44421'
     attempts = 0
     while attempts < 5:
-        entered_keycode = (input('Enter credential number: '))
+        entered_keycode = input('Enter credential number: ')
         if keycode == entered_keycode:
             logisticpage()
             while True:
-                entry = (input('\nChoose Preferred Action: '))
-                if entry == '1':
-                    log_inventorycheck()
-                elif entry == '2':
-                    log_addinventory()
-                elif entry == '3':
-                    log_stockupdate()
-                elif entry == '4':
-                    log_deletedata()
-                elif entry == '5':
-                    MainMenu()
-                else:
-                    print('Invalid entry, please choose a valid option [1-5]')
-                    logisticpage()
+                try:
+                    entry = int(input('\nChoose Preferred Action: '))
+                    if entry == 1:
+                        log_inventorycheck()
+                    elif entry == 2:
+                        log_addinventory()
+                    elif entry == 3:
+                        log_stockupdate()
+                    elif entry == 4:
+                        log_deletedata()
+                    elif entry == 5:
+                        MainMenu()
+                    else:
+                        print('Invalid entry, please choose a valid option [1-5]')
+                        logisticpage()
+                except ValueError:
+                    print('Invalid input, please enter number')
         else:
             attempts += 1
             print(f'Invalid keycode! Remaining attempts: {5 - attempts}')
@@ -523,21 +541,24 @@ def ppic_landingpage():
     keycode = '44321'
     attempts = 0
     while attempts < 5:   
-        entered_keycode = (input('Enter credential number: ')) 
+        entered_keycode = input('Enter credential number: ') 
         if keycode == entered_keycode:
             ppicpage()
             while True:
-                entry = (input('\nChoose Preferred Action: '))
-                if entry == '1':
-                    rm_inventory()
-                    ppicpage()
-                elif entry == '2':
-                    ppic_production()
-                elif entry == '3':
-                    MainMenu()
-                else:
-                    print('Invalid entry, please choose a valid option [1-3]')
-                    ppicpage()
+                try:
+                    entry = int(input('\nChoose Preferred Action: '))
+                    if entry == 1:
+                        rm_inventory()
+                        ppicpage()
+                    elif entry == 2:
+                        ppic_production()
+                    elif entry == 3:
+                        MainMenu()
+                    else:
+                        print('Invalid entry, please choose a valid option [1-3]')
+                        ppicpage()
+                except ValueError:
+                    print('Invalid input, please enter number')
         else:
             attempts += 1
             print(f'Invalid keycode! Remaining attempts: {5 - attempts}')
@@ -551,20 +572,23 @@ def proc_landingpage():
     keycode = '44221'
     attempts = 0
     while attempts < 5:   
-        entered_keycode = (input('Enter credential number: ')) 
+        entered_keycode = input('Enter credential number: ')
         if keycode == entered_keycode:
             procpage()
             proc_autocheck()
             while True:
-                entry = (input('\nChoose Preffered Action: '))
-                if entry == '1':
-                    rm_inventory()
-                    procpage()
-                elif entry == '2':
-                    MainMenu()
-                else:
-                    print('Invalid entry, please choose a valid option [1-2]')
-                    procpage()
+                try:
+                    entry = int(input('\nChoose Preffered Action: '))
+                    if entry == 1:
+                        rm_inventory()
+                        procpage()
+                    elif entry == 2:
+                        MainMenu()
+                    else:
+                        print('Invalid entry, please choose a valid option [1-2]')
+                        procpage()
+                except ValueError:
+                    print('Invalid input, please enter number')
         else:
             attempts += 1
             print(f'Invalid keycode! Remaining attempts: {5 - attempts}')
@@ -582,17 +606,20 @@ def sales_landingpage():
         if keycode == entered_keycode:
             salespage()
             while True:
-                entry = (input('\nChoose Preffered Action: '))
-                if entry == '1':
-                    fg_inventory()
-                    salespage()
-                elif entry == '2':
-                    sales_dataentry()
-                elif entry == '3':
-                    MainMenu()
-                else:
-                    print('\nInvalid entry, please choose a valid option [1-3]')
-                    salespage()
+                try:
+                    entry = int(input('\nChoose Preffered Action: '))
+                    if entry == 1:
+                        fg_inventory()
+                        salespage()
+                    elif entry == 2:
+                        sales_dataentry()
+                    elif entry == 3:
+                        MainMenu()
+                    else:
+                        print('\nInvalid entry, please choose a valid option [1-3]')
+                        salespage()
+                except ValueError:
+                    print('Invalid input, please enter number')
         else:
             attempts += 1
             print(f'Invalid keycode! Remaining attempts: {5 - attempts}')
@@ -632,4 +659,5 @@ def salespage():
            1. Inventory Check (Table)
            2. Input Sales Data
            3. Back to Main Menu''')
+
 MainMenu()
