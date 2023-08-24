@@ -69,7 +69,7 @@ def log_inventorycheck(): # Read
         except ValueError:
             print('Invalid input, please enter number')
 
-def log_addinventory(): # Create
+def log_addinventory(): # Create new inventory data to RM & FG
     menu='''
     Choose Inventory to Create New:
     1. Raw Material
@@ -172,7 +172,7 @@ def log_addinventory(): # Create
         except ValueError:
             print('Invalid input, please enter number')
 
-def log_stockupdate(): # Able to increase stock quantity (Update)
+def log_stockupdate(): # Able to increase stock quantity RM & FG (Update)
     menu = '''
     Choose Inventory to Update Stock:
     1. Raw Material
@@ -278,7 +278,7 @@ def log_stockupdate(): # Able to increase stock quantity (Update)
         except ValueError:
             print('Invalid input, please enter number')
 
-def log_deletedata(): # Delete inventory from list 
+def log_deletedata(): # Delete inventory data from RM & FG (Delete)
     menu = '''
     Choose Inventory to Delete:
     1. Raw Material
@@ -350,12 +350,12 @@ def log_deletedata(): # Delete inventory from list
                 break
 
             else:
-                print('\nInvalid input! Please choose a valid option [1-3]')
+                print('\nInvalid input! Please enter a valid option [1-3]')
         except ValueError:
             print('Invalid input, please enter number')
 
 # PPIC Dept. Functions
-def ppic_production(): # Decrease stock quantity (Update)
+def ppic_production(): # Decrease stock quantity on RM (Update)
     intro = '''
 ====== Production Process ======''' 
     print(intro)
@@ -420,7 +420,7 @@ def proc_autocheck(): # Read data (Raw Material) and automaticly display warning
         print("\nAll Raw Material stock is in acceptable level")
 
 # Sales Dept. Functions
-def sales_dataentry(): # Update data on Finished Goods (Substract)   
+def sales_dataentry(): # Update data on Finished Goods (Deduct Stock)   
     intro = '''
 ====== Sales Data Entry ======'''
     print(intro)
